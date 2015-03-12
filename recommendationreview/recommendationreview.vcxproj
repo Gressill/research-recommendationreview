@@ -18,6 +18,17 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Constant.h" />
+    <ClInclude Include="..\interSection.hpp" />
+    <ClInclude Include="..\operate_config.h" />
+    <ClInclude Include="..\SimpleNetwork.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\operate_config.cpp" />
+    <ClCompile Include="..\SimpleNetwork.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ED2C423D-C68A-4A5F-A6C4-AB37F9EE21BC}</ProjectGuid>
     <RootNamespace>recommendationreview</RootNamespace>
@@ -117,17 +128,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\..\Dropbox\program\project\recomdationReviewVS\main.cpp" />
-    <ClCompile Include="..\..\..\..\Dropbox\program\project\recomdationReviewVS\operate_config.cpp" />
-    <ClCompile Include="..\..\..\..\Dropbox\program\project\recomdationReviewVS\SimpleNetwork.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\Dropbox\program\project\recomdationReviewVS\Constant.h" />
-    <ClInclude Include="..\..\..\..\Dropbox\program\project\recomdationReviewVS\interSection.hpp" />
-    <ClInclude Include="..\..\..\..\Dropbox\program\project\recomdationReviewVS\operate_config.h" />
-    <ClInclude Include="..\..\..\..\Dropbox\program\project\recomdationReviewVS\SimpleNetwork.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
