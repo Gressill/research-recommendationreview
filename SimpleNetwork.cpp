@@ -76,17 +76,13 @@ int SimpleNetwork::loadNetworkFromFile(string filename, bool startFromZero)
 	cout<<whichSet<<"	degree:	";
 	if (infile.is_open())
 	{
-		int a,b,score;
+		int a = 0,b = 0,score = 0;
 		int i=0,j=0;
 		while (!infile.eof() )
 		{
 			infile.getline (buffer,33);
-			sscanf_s(buffer,"%d %d %d",&a,&b,&score);
+			sscanf_s(buffer,"%d %d",&a,&b);
 			//cout<<a<<" "<<b<<"	"<<score<<" end"<<endl;
-			if (score<3)//&&sizeof(score)>0)
-			{
-				continue;
-			}
 			if (maxuser<a)
 			{
 				maxuser = a;
@@ -130,20 +126,16 @@ int SimpleNetwork::loadNetworkFromFile(string filename)
 		return 0;
 	}
 	whichSet = filename.substr(filename.size()-15);
-	cout<<whichSet<<"	degree:	";
+	cout << filename << "	degree:	";
 	if (infile.is_open())
 	{
-		int a,b,score;
+		int a = 0,b = 0,score = 0;
 		int i=0,j=0;
 		while (!infile.eof() )
 		{
 			infile.getline (buffer,33);
-			sscanf_s(buffer,"%d %d %d",&a,&b,&score);
+			sscanf_s(buffer,"%d %d",&a,&b);
 			//cout<<a<<" "<<b<<"	"<<score<<" end"<<endl;
-			if (score<3&&score>0)
-			{
-				continue;
-			}
 			if (maxuser<a)
 			{
 				maxuser = a;
@@ -188,6 +180,141 @@ int SimpleNetwork::loadNetworkFromFile(string filename)
 	cout<<countDegree()<<endl;;
 	return 0;
 }
+
+int SimpleNetwork::loadNetworkFromFileWithScore(string filename, bool startFromZero)
+{
+	int maxuser = 0, maxitem = 0;
+	isStartFromZero = startFromZero;
+	char buffer[256];
+	if (filename.length() == 0)
+	{
+		filename = inFileName;
+	}
+
+	ifstream infile(filename);
+	if (!infile)
+	{
+		cout << "can not open this file" << filename << endl;
+		return 0;
+	}
+	whichSet = filename.substr(filename.size() - 15);
+	cout << whichSet << "	degree:	";
+	if (infile.is_open())
+	{
+		int a = 0, b = 0, score = 0;
+		int i = 0, j = 0;
+		while (!infile.eof())
+		{
+			infile.getline(buffer, 33);
+			sscanf_s(buffer, "%d %d %d", &a, &b, &score);
+			//cout<<a<<" "<<b<<"	"<<score<<" end"<<endl;
+			if (score<3)//&&sizeof(score)>0)
+			{
+				continue;
+			}
+			if (maxuser<a)
+			{
+				maxuser = a;
+			}if (maxitem<b)
+			{
+				maxitem = b;
+			}
+			if (startFromZero)
+			{
+				addEdge(a, b);
+			}
+			else{
+				addEdge(a - 1, b - 1);
+			}
+			i++;
+		}
+		infile.close();
+	}
+	else
+	{
+		cout << "Error,can't open...\n";
+		//exit(2);
+	}
+	//testSymmDegree();
+	cout << "loading network complete! has user: " << maxuser << " item : " << maxitem << endl;
+	return 0;
+}
+
+int SimpleNetwork::loadNetworkFromFileWithScore(string filename)
+{
+	char buffer[256];
+	int maxuser = 0, maxitem = 0;
+	if (filename.length() == 0)
+	{
+		filename = inFileName;
+	}
+
+	ifstream infile(filename);
+	if (!infile)
+	{
+		cout << "can not open this file" << filename << endl;
+		return 0;
+	}
+	whichSet = filename.substr(filename.size() - 15);
+	cout << filename << "	degree:	";
+	if (infile.is_open())
+	{
+		int a = 0, b = 0, score = 0;
+		int i = 0, j = 0;
+		while (!infile.eof())
+		{
+			infile.getline(buffer, 33);
+			sscanf_s(buffer, "%d %d %d", &a, &b, &score);
+			//cout << a << " " << b << "	" << score << " end" << endl;
+			if (score<3 && score>0)
+			{
+				continue;
+			}
+			if (maxuser<a)
+			{
+				maxuser = a;
+			}if (maxitem<b)
+			{
+				maxitem = b;
+
+			}
+			/*if (maxitem>1700||maxuser>1000)
+			{
+			cout<<"line : "<<i<<"	"<<a<<" "<<b<<"	"<<score<<"	"<<c<<"	"<<d<<"	"<<maxuser<<"	"<<maxitem<<endl;
+			break;
+			}
+			*/
+			if (a == 0)
+			{
+				empty();
+				loadNetworkFromFile(filename, true);
+				cout << "this file user start from 0" << endl;
+				return -1;
+			}
+			if (b == 0)
+			{
+				empty();
+				loadNetworkFromFile(filename, true);
+				cout << "this file item start from 0" << endl;
+				return -1;
+			}
+			addEdge(a - 1, b - 1);
+			i++;
+		}
+		infile.close();
+	}
+	else
+	{
+		cout << "Error,can't open...\n";
+		//exit(2);
+	}
+	//testSymmDegree();
+	//cout<<"maxitem	"<<maxitem<<" maxuser	"<<maxuser<<endl;
+	//cout<<"loading network complete! has user: "<<maxuser<<" item : "<<maxitem<<endl;
+	cout << countDegree() << endl;;
+	return 0;
+}
+
 
 SimpleNetwork::SimpleNetwork(int a, int b)
 {

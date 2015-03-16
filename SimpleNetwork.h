@@ -49,6 +49,8 @@ public:
 	~SimpleNetwork(void);
 	int loadNetworkFromFile(string filename);
 	int loadNetworkFromFile(string filename,bool startFromZero);
+	int loadNetworkFromFileWithScore(string filename);
+	int loadNetworkFromFileWithScore(string filename, bool startFromZero);
 	void whoami();
 	void init();
 	void initUserItemMatrix();//将数据结构从迭代转化为矩阵
