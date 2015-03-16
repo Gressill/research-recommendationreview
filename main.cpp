@@ -703,7 +703,7 @@ double RankingScoreNotCollect(int i, vector<int> &rankForUser,int recomListSize,
 				if (rankForUser[tempItem] == 0)
 				{
 					//test why localrs alway smaller tham rs
-					cout<< rankForUser[tempItem]<<"	"<<notRecommdatedPos<<" notCollectSize	"<<notCollectSize<<"	"<<tempPosition<<" localsize	"<<localSize<<endl;
+					//cout<< rankForUser[tempItem]<<"	"<<notRecommdatedPos<<" notCollectSize	"<<notCollectSize<<"	"<<tempPosition<<" localsize	"<<localSize<<endl;
 				}//cout<<temprankscore<<"	lR	"<<templocalrs<<" localcounter "<<localcounter<<endl;
 			}
 		}
@@ -4820,6 +4820,332 @@ vector<paraGroup> getLastRuningParmeter()
 	return paraGroupVector;
 }
 
+//这里读取之前的参数来计算local rs
+double calculataLocalRsAgain(){
+	const int cishu = 10;
+	bool hasOldPara = false;double avg = 0.0, sum = 0.0, stadardivation = 0.0;
+	oldNet.loadNetworkFromFile(inFileName);//这里计算rs的时候要用到oldNet的一些度，uncollectitem
+
+	ifstream infile("oldparam.txt");
+	if (!infile)
+	{
+		cout << "can not open this file oldparam.txt" << endl;
+		hasOldPara = false;
+	}
+	else{
+		getLastRuningParmeter();
+		hasOldPara = true;
+	}
+
+	for (int times = 0; times < cishu; times++)
+	{
+		if (hasOldPara)
+		{
+			init(times);
+			//---------------------------------------------
+			runingMode = 1;//set testdate to testSet. 90%---10%
+			//---------------------------------------------
+			//WHCMatrix(paraGroupVector[times].lamada);
+			//IHC(paraGroupVector[times].lamada);
+			//IMD(paraGroupVector[times].lamada);
+			//IHCMatrix(paraGroupVector[times].lamada);
+			//HHCMatrix(paraGroupVector[times].lamada);
+			//HHC(paraGroupVector[times].lamada);
+			//hybirdHAndPNonLinaer(paraGroupVector[times].lamada);
+			//RE_NBI(paraGroupVector[times].lamada);
+			//Heter_NBI(paraGroupVector[times].lamada);
+			PD(paraGroupVector[times].lamada);
+			//URA_NBI(paraGroupVector[times].lamada);
+			//Biased_Heat(paraGroupVector[times].lamada);
+			//Cold_Start(paraGroupVector[times].lamada);
+			//Cold_StartMatrix(paraGroupVector[times].lamada);
+			//caclSparseNetwork(paraGroupVector[times].lamada);
+			//NCF(paraGroupVector[times].lamada);
+			//NCFNew(paraGroupVector[times].lamada);
+			//MCF();
+			//HeatS();
+			//B_Rank();
+			//ProbS(1);
+
+			double templs = getLocalRankingScore();
+			cout << "localrs	" << templs << "	and lamada is: " << paraGroupVector[times].lamada << endl;
+			sum += templs;
+		}
+	}
+	sum = sum / cishu;
+	cout << "avg localrs is: "<< sum << endl;
+	return sum;
+}
+
+double calculataLocalRsAnd9010Rs(){
+	const int cishu = 10;
+	bool hasOldPara = false;
+	double oldParaTimesRange = 3;
+	int counterX = 0, isBestTimes = 0;
+	double rsAndOthersArray[7][cishu];//记录其他一些观测量的。0是RS，1是localRS，2Precision	3Recall	4IntraSimilarity	5HammingDistance	6Popularity 7 80%-10% RS
+	double evaluationIndex[7];//记录其他一些观测量的。0是RS，1是localRS，2Precision	3Recall	4IntraSimilarity	5HammingDistance	6Popularity 7 80%-10% RS
+
+	double avg = 0.0, sum = 0.0, stadardivation = 0.0;
+	double bestlamada = 0.0, bestRankingScore = 10.0, temprs = 0.0, avgLamada = 0.0, avgOldRS = 0.0, lastRankingScore = 10.0;
+	double prametesArray[cishu][5];
+	memset(prametesArray, 0, sizeof(prametesArray));
+	//cout<<" First prametesArray[9][4] is : "<<prametesArray[cishu-1][4]<<endl;
+	memset(rsAndOthersArray, 0, sizeof(rsAndOthersArray));
+	memset(evaluationIndex, 0, sizeof(evaluationIndex));
+	oldNet.loadNetworkFromFile(inFileName);//这里计算rs的时候要用到oldNet的一些度，uncollectitem
+	string resultfile = generateFilename();
+
+	ifstream infile("oldparam.txt");
+	if (!infile)
+	{
+		cout << "can not open this file oldparam.txt" << endl;
+		hasOldPara = false;
+	}
+	else{
+		getLastRuningParmeter();
+		hasOldPara = true;
+	}
+
+	for (int times = 0; times<cishu; times++)
+	{
+		bool isWrongRange = false;
+		lastRankingScore = 10.0;
+		bestlamada = 0.0, bestRankingScore = 1.0, temprs = 0.0;
+
+		if (hasOldPara)
+		{
+			//---------------------------------------------
+			runingMode = 1;//set testdate to testSet. 90%---10%
+			//---------------------------------------------
+			//WHCMatrix(prametesArray[times][0]);
+			//IHC(prametesArray[times][0]);
+			//IMD(prametesArray[times][0]);
+			//IHCMatrix(prametesArray[times][0]);
+			//HHCMatrix(prametesArray[times][0]);
+			//HHC(prametesArray[times][0]);
+			//hybirdHAndPNonLinaer(prametesArray[times][0]);
+			//RE_NBI(prametesArray[times][0]);
+			//Heter_NBI(prametesArray[times][0]);
+			//PD(prametesArray[times][0]);
+			//URA_NBI(prametesArray[times][0]);
+			//Biased_Heat(prametesArray[times][0]);
+			//Cold_Start(prametesArray[times][0]);
+			//Cold_StartMatrix(prametesArray[times][0]);
+			//caclSparseNetwork(prametesArray[times][0]);
+			//NCF(prametesArray[times][0]);
+			//NCFNew(prametesArray[times][0]);
+			//MCF();
+			ProbS(prametesArray[times][0]);
+			//HeatS();
+			//B_Rank();
+			//ProbS(1);
+
+			rsAndOthersArray[0][times] = getLocalRankingScore();
+			//prametesArray[times][3] = rsAndOthersArray[0][times];
+			cout << "RS on 9---1 dividing datab	" << rsAndOthersArray[0][times] << endl;
+			sum += rsAndOthersArray[0][times];
+
+
+			if (paraGroupVector[times].isTheBestTimes > 1 && paraGroupVector[times].isTheBestTimes < 1000)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
+			{
+				prametesArray[times][0] = paraGroupVector[times].lamada;
+				prametesArray[times][1] = paraGroupVector[times].sita;
+				prametesArray[times][2] = paraGroupVector[times].gama;;
+				prametesArray[times][3] = paraGroupVector[times].rs;
+				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes + 1;
+				//rsAndOthersArray[7][times] = bestRankingScore;
+
+				continue;
+			}
+			else
+			{
+				cout << "isTheBestTimes is wired" << paraGroupVector[times].isTheBestTimes << endl;
+			}
+			cout << "old lamada: " << paraGroupVector[times].lamada << endl;
+			if (paraGroupVector[times].lamada != 0)
+			{
+				minlamada = paraGroupVector[times].lamada - oldParaTimesRange*lamadaIncremental;
+				maxlamada = minlamada + 2 * oldParaTimesRange*lamadaIncremental;
+				//lamadaIncremental = 0.01;
+			}
+		}
+
+		//cout<<"Second prametesArray[times][4] is : "<<prametesArray[times][4]<<endl;
+		cout << "minlamada: " << minlamada << " maxlamada: " << maxlamada << " lamadaIncremental: " << lamadaIncremental << endl;
+
+		init(times);
+		for (double lamada = minlamada; lamada <= maxlamada; lamada += lamadaIncremental)
+		{
+			//---------------------------------------------
+			runingMode = 1;//set testdate to train. 80%---10%
+			//---------------------------------------------
+
+			//counterX++;
+			//WHCMatrix(lamada,trainingSet);
+			//IHC(lamada,trainingSet);
+			//IMD(lamada,trainingSet);
+			//IHCMatrix(lamada,trainingSet);
+			//HHCMatrix(lamada,trainingSet);
+			//HHC(lamada,trainingSet);
+			//hybirdHAndPNonLinaer(lamada,trainingSet);
+			//RE_NBI(lamada,trainingSet);
+			//Heter_NBI(lamada,trainingSet);
+			PD(lamada, trainingSet);
+			//URA_NBI(lamada,trainingSet);
+			//Biased_Heat(lamada,trainingSet);
+			//Cold_Start(lamada,trainingSet);
+			//Cold_StartMatrix(lamada,trainingSet);
+			//caclSparseNetwork(lamada,trainingSet);
+			//NCF(lamada,trainingSet);
+			//NCFNew(lamada,trainingSet);
+			//MCF(lamada,trainingSet);
+			//ProbS(lamada,trainingSet);
+			//HeatS(trainingSet);
+			//B_Rank(trainingSet);
+			//ProbS(1,trainingSet);
+			//temprs = RankingScoreNotCollect(learningSet);
+			//Heter_PD(lamada,sita,trainingSet);
+			//SPD(lamada,sita,trainingSet);
+			//TheUtilmateMD(lamada,sita,gama,trainingSet);
+			/*Heter_UtilmateMD(lamada,sita,gama);*/
+			temprs = getRankingScore();
+			cout << "lamada: " << lamada << "	sita: " << 0 << " gama: " << 0 << "	nowRS: " << temprs << "	lastRankingScore " << lastRankingScore << endl;
+			cout << "local is : " << getLocalRankingScore() << endl;
+			if (temprs<bestRankingScore)
+			{
+				bestRankingScore = temprs;
+				bestlamada = lamada;
+			}
+
+			if (temprs>lastRankingScore)
+			{
+				isWrongRange = true;
+				//cout<<"lamada: "<<lamada<<"	sita: "<<0<<" gama: "<<0<<"	RS: "<<temprs<<endl;
+				cout << "last is the best bestlamada: " << bestlamada << "	temprs:	" << temprs << endl;
+				cout << "---------------------------------------" << times << "---------------------------------------------" << endl;
+
+				lastRankingScore = 10.0;
+				break;
+			}
+
+			lastRankingScore = temprs;
+		}
+
+		stringstream errorMessagess;
+		if (bestlamada >= maxlamada)
+		{
+			isWrongRange = true;
+			errorMessagess << "need bigger lamada: bestlamada " << bestlamada << "	maxlamada: " << maxlamada << "	bestrs:	" << bestRankingScore << endl;
+		}
+		else if (bestlamada <= minlamada)
+		{
+			isWrongRange = true;
+			errorMessagess << "need smaller lamada: bestlamada " << bestlamada << "	minlamada: " << minlamada << "	bestrs:	" << bestRankingScore << endl;
+		}
+		if (isWrongRange)
+		{
+			//cout<<"---------------------------------------isWrongRange-----------------------------------------------"<<endl;
+			string tempcontents = errorMessagess.str();
+			cout << tempcontents << endl;
+			cout << "--------------------------------------isWrongRange finish this" << times << "------------------------" << endl;
+		}
+
+		//here to add some code to record the old rs
+		if (hasOldPara)
+		{
+			if (paraGroupVector[times].oldRS < bestRankingScore && paraGroupVector[times].oldRS>0)
+			{
+				prametesArray[times][0] = paraGroupVector[times].lamada;
+				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes + 1;
+				prametesArray[times][3] = paraGroupVector[times].oldRS;
+				cout << "bestlamada is old one: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;
+			}
+			else{
+				prametesArray[times][0] = bestlamada;
+				prametesArray[times][3] = bestRankingScore;
+				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes;
+				cout << "bestlamada: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;
+			}
+		}
+		else{
+			prametesArray[times][0] = bestlamada;
+			prametesArray[times][3] = bestRankingScore;
+			prametesArray[times][4] = 0;
+			cout << "bestlamada: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;
+		}
+	}
+	avg = sum / cishu;
+
+	stringstream tempcontentstream;
+	tempcontentstream << "t	lamada	sita	gama	oldRS	newRS	lrs	pricis	recall	intrSim	hamdis	Popul" << endl;
+	writefile(resultfile, tempcontentstream.str());
+	tempcontentstream.str("");
+	//cout<<"Thrid  prametesArray[times][4] is : "<<prametesArray[cishu-1][4]<<endl;
+	stringstream oldParaFile;
+	stringstream oldParaLogFile;
+
+	for (int times = 0; times<cishu; times++)
+	{
+		avgLamada += prametesArray[times][0];
+		avgOldRS += prametesArray[times][3];
+
+		evaluationIndex[0] += rsAndOthersArray[0][times];
+		evaluationIndex[1] += rsAndOthersArray[1][times];
+		evaluationIndex[2] += rsAndOthersArray[2][times];
+		evaluationIndex[3] += rsAndOthersArray[3][times];
+		evaluationIndex[4] += rsAndOthersArray[4][times];
+		evaluationIndex[5] += rsAndOthersArray[5][times];
+		evaluationIndex[6] += rsAndOthersArray[6][times];
+
+		stadardivation += ((rsAndOthersArray[0][times] - avg)*(rsAndOthersArray[0][times] - avg));
+		//		cout<<"net "<<times<<" lamada "<<prametesArray[times][0]<<" rs is: "<<prametesArray[times][3]<<endl;
+		tempcontentstream << times << "\t" << prametesArray[times][0] << "\t" << prametesArray[times][1] << "\t" << prametesArray[times][2];
+		//oldParaFile<<times<<"\t"<<prametesArray[times][0]<<"\t"<<prametesArray[times][1]<<"\t"<<prametesArray[times][2]<<"\t"<<isBestTimes<<"\t"<<prametesArray[times][3]<<"\r\n";
+		//cout<<"oldParaFile.str()"<<oldParaFile.str()<<endl;;
+		tempcontentstream << "\t" << prametesArray[times][3] << "\t" << rsAndOthersArray[0][times] << "\t" << rsAndOthersArray[1][times] << "\t" << rsAndOthersArray[2][times] << "\t" << rsAndOthersArray[3][times] << "\t" << rsAndOthersArray[4][times] << "\t" << rsAndOthersArray[5][times] << "\t" << rsAndOthersArray[6][times];
+		cout << tempcontentstream.str() << endl;
+		writefile(resultfile, tempcontentstream.str());
+		tempcontentstream.str("");
+
+		oldParaLogFile << times << "\t" << prametesArray[times][0] << "\t" << prametesArray[times][1] << "\t" << prametesArray[times][2] << "\t" << prametesArray[times][3] << "\t" << prametesArray[times][4] << "\r\n";
+		oldParaFile << times << "\t" << prametesArray[times][0] << "\t" << prametesArray[times][1] << "\t" << prametesArray[times][2] << "\t" << prametesArray[times][4];
+		oldParaFile << "\t" << prametesArray[times][3] << "\t" << rsAndOthersArray[0][times] << "\t" << rsAndOthersArray[1][times] << "\t" << rsAndOthersArray[2][times] << "\t" << rsAndOthersArray[3][times] << "\t" << rsAndOthersArray[4][times] << "\t" << rsAndOthersArray[5][times] << "\t" << rsAndOthersArray[6][times];
+		writefile("oldparam.txt", oldParaFile.str());
+		oldParaFile.str("");
+		//cout<<"Fourth  prametesArray[times][4] is : "<<prametesArray[times][4]<<endl;
+
+	}
+	//cout<<"oldParaFile.str()"<<oldParaFile.str()<<endl;
+	removeAndWritefile("oldparam_log.txt", oldParaLogFile.str());
+	oldParaLogFile.str("");
+
+	avgLamada = avgLamada / cishu;
+	avgOldRS = avgOldRS / cishu;
+
+	evaluationIndex[0] = evaluationIndex[0] / cishu;
+	evaluationIndex[1] = evaluationIndex[1] / cishu;
+	evaluationIndex[2] = evaluationIndex[2] / cishu;
+	evaluationIndex[3] = evaluationIndex[3] / cishu;
+	evaluationIndex[4] = evaluationIndex[4] / cishu;
+	evaluationIndex[5] = evaluationIndex[5] / cishu;
+	evaluationIndex[6] = evaluationIndex[6] / cishu;
+
+	stadardivation = sqrt(stadardivation / cishu);
+
+	stringstream avgParamStream;
+
+	avgParamStream << funcName << endl;
+	avgParamStream << "minlamada: " << minlamada << " maxlamada: " << maxlamada << " lamadaIncremental: " << lamadaIncremental << endl;
+	avgParamStream << "oldRS	newRS	lrs	pricis	recall	intrSim	hamdis	Popul	lamada	sita	gama	standdivation" << endl;
+	avgParamStream << "avg: " << avgOldRS << "\t" << avg << "\t" << evaluationIndex[1] << "\t" << evaluationIndex[2] << "\t" << evaluationIndex[3] << "\t" << evaluationIndex[4] << "\t" << evaluationIndex[5] << "\t" << evaluationIndex[6] << "\t" << avgLamada << "\t" << "0" << "\t" << "0" << "\t" << stadardivation << endl;
+
+	cout << "stadardivation:	" << stadardivation << " avg: " << avg << endl;
+	cout << "avgParam:" << avgLamada << "\t" << "0" << "\t" << "0" << "\t" << " stadardivation:	" << stadardivation << endl << "avg: " << avgOldRS << "\t" << avg << "\t" << evaluationIndex[1] << "\t" << evaluationIndex[2] << "\t" << evaluationIndex[3] << "\t" << evaluationIndex[4] << "\t" << evaluationIndex[5] << "\t" << evaluationIndex[6] << endl;
+
+	writefile(resultfile, avgParamStream.str());
+	return stadardivation;
+}
+
 //一个参数的
 double getStandardDevationOne()
 {
@@ -6164,9 +6490,11 @@ int main()
 		train();
 	}else if(flag==2){
 		test();
-	}else if(flag==3){
+	}
+	else if (flag == 3){
+		calculataLocalRsAgain();
 		//getStandardDevationeer();
-		getStandardDevationOne();
+		//getStandardDevationOne(); 
 		//getStandardDevationTwo();
 		//getStandardDevationThree();
 	}else{
