@@ -4856,7 +4856,7 @@ double calculataLocalRsAgain(){
 			//hybirdHAndPNonLinaer(paraGroupVector[times].lamada);
 			//RE_NBI(paraGroupVector[times].lamada);
 			//Heter_NBI(paraGroupVector[times].lamada);
-			PD(paraGroupVector[times].lamada);
+			//PD(paraGroupVector[times].lamada);
 			//URA_NBI(paraGroupVector[times].lamada);
 			//Biased_Heat(paraGroupVector[times].lamada);
 			//Cold_Start(paraGroupVector[times].lamada);
@@ -4868,6 +4868,11 @@ double calculataLocalRsAgain(){
 			//HeatS();
 			//B_Rank();
 			//ProbS(1);
+			//Heter_PD(paraGroupVector[times].amada, paraGroupVector[times].sita);
+			//SPD(paraGroupVector[times].lamada, paraGroupVector[times].sita);	
+			//TheUtilmateMD(paraGroupVector[times].lamada, paraGroupVector[times].sita,paraGroupVector[times].gama);
+			//Heter_UtilmateMD(paraGroupVector[times].lamada, paraGroupVector[times].sita, paraGroupVector[times].gama);
+			//ExtractingBackbone(paraGroupVector[times].lamada, paraGroupVector[times].sita);
 
 			double templs = getLocalRankingScore();
 			cout << "localrs	" << templs << "	and lamada is: " << paraGroupVector[times].lamada << endl;
@@ -4875,6 +4880,7 @@ double calculataLocalRsAgain(){
 		}
 	}
 	sum = sum / cishu;
+	cout << "------------------------------ "<<endl;
 	cout << "avg localrs is: "<< sum << endl;
 	return sum;
 }
@@ -6748,7 +6754,7 @@ int main()
 		calculataLocalRsAgain();
 		//getStandardDevationeer();
 		//getStandardDevationOne();
-		get90_10_one();
+		//get90_10_one();
 		//getStandardDevationTwo();
 		//getStandardDevationThree();
 	}else{
