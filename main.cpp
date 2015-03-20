@@ -4868,10 +4868,11 @@ double calculataLocalRsAgain(){
 			//HeatS();
 			//B_Rank();
 			//ProbS(1);
+			//ProbS(paraGroupVector[times].lamada);
 			//Heter_PD(paraGroupVector[times].lamada, paraGroupVector[times].sita);
 			//SPD(paraGroupVector[times].lamada, paraGroupVector[times].sita);	
-			//TheUtilmateMD(paraGroupVector[times].lamada, paraGroupVector[times].sita,paraGroupVector[times].gama);
-			Heter_UtilmateMD(paraGroupVector[times].lamada, paraGroupVector[times].sita, paraGroupVector[times].gama);
+			TheUtilmateMD(paraGroupVector[times].lamada, paraGroupVector[times].sita,paraGroupVector[times].gama);
+			//Heter_UtilmateMD(paraGroupVector[times].lamada, paraGroupVector[times].sita, paraGroupVector[times].gama);
 			//ExtractingBackbone(paraGroupVector[times].lamada, paraGroupVector[times].sita);
 
 			double templs = getLocalRankingScore();
@@ -4963,7 +4964,7 @@ double calculataLocalRsAnd9010RsOne() {
 			//hybirdHAndPNonLinaer(lamada);
 			//RE_NBI(lamada);
 			//Heter_NBI(lamada);
-			PD(lamada);
+			//PD(lamada);
 			//URA_NBI(lamada);
 			//Biased_Heat(lamada);
 			//Cold_Start(lamada);
@@ -5428,7 +5429,7 @@ double calculataLocalRsAnd9010RsThree()
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
 				prametesArray[times][2] = paraGroupVector[times].gama;;
-				prametesArray[times][3] = paraGroupVector[times].rs;
+				prametesArray[times][3] = paraGroupVector[times].oldRS;
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes + 1;
 
 				rsAndOthersArray[0][times] = paraGroupVector[times].rs;
@@ -5505,10 +5506,8 @@ double calculataLocalRsAnd9010RsThree()
 					//---------------------------------------------
 
 
-					//TheUtilmateMD(lamada,sita,gama,trainingSet);
-
-
-					Heter_UtilmateMD(lamada, sita, gama, trainingSet);
+					TheUtilmateMD(lamada,sita,gama,trainingSet);
+					//Heter_UtilmateMD(lamada, sita, gama, trainingSet);
 
 					temprs = getRankingScore();
 					if (temprs<bestRankingScore)
@@ -5765,7 +5764,7 @@ double getStandardDevationOne()
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
 				prametesArray[times][2] = paraGroupVector[times].gama;;
-				prametesArray[times][3] = paraGroupVector[times].rs;
+				prametesArray[times][3] = paraGroupVector[times].oldRS;
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes+1;
 
 				rsAndOthersArray[0][times] = paraGroupVector[times].rs;
@@ -7067,8 +7066,8 @@ int main()
 		test();
 	}
 	else if (flag == 3){
-		//calculataLocalRsAgain();
-		calculataLocalRsAnd9010Rs();
+		calculataLocalRsAgain();
+		//calculataLocalRsAnd9010RsThree();
 		//getStandardDevationeer();
 		//getStandardDevationOne();
 		//getStandardDevationTwo();
