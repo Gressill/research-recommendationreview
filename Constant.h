@@ -3,8 +3,8 @@
 using namespace std;
 
 class Constant{
-    //movielens
-    public:
+	//movielens
+	public:
 //        const static int userNum ;//= 943;
 //        const static int itemNum ;//= 1682;
 //        const static char* inFileName;// = "../recommendationreview/Data/movielens/movielens.dat";//polblogs1  realPolblogbeginfrom1
@@ -16,7 +16,7 @@ class Constant{
 	const int HASHLENGTH= 3000;
 	const static int notFound_number = -333;
 
-    //movielens
+	//movielens
  //   const static int userNum = 943;
  //   const static int itemNum = 1682;
  //   const static char* inFileName = "../recommendationreview/Data/movielens/movielens.dat";//polblogs1  realPolblogbeginfrom1
@@ -24,20 +24,20 @@ class Constant{
 	//const static string resultfilepath = "F:/Documents/Dropbox/program/project/recomdationReviewVS/Result/movielens/";
 
 	//netflix
-	const static int userNum = 10000;
-	const static int itemNum = 6000;
+	//const static int userNum = 10000;
+	//const static int itemNum = 6000;
+	////const static char* inFileName = "../recommendationreview/Data/netflix_pnas/netflix_pnas.txt";//
+	////const static std::string DATAPATH = "../recommendationreview/Data/netflix_pnas/";
 	//const static char* inFileName = "../recommendationreview/Data/netflix_pnas/netflix_pnas.txt";//
 	//const static std::string DATAPATH = "../recommendationreview/Data/netflix_pnas/";
-	const static char* inFileName = "../recommendationreview/Data/netflix_pnas/netflix_pnas.txt";//
-	const static std::string DATAPATH = "../recommendationreview/Data/netflix_pnas/";
-	const static string resultfilepath = "F:/Documents/Dropbox/program/project/recomdationReviewVS/Result/netflix/";
+	//const static string resultfilepath = "F:/Documents/Dropbox/program/project/recomdationReviewVS/Result/netflix/";
 
-    //amazon
-	//const static int userNum = 9999;
-	//const static int itemNum = 24403;//\recommendationreview\Data\amazon
-	//const static char* inFileName = "../recommendationreview/Data/amazon1w/Amazon_reindex_1w.txt";//
-	//const static std::string DATAPATH = "../recommendationreview/Data/amazon1w/";
-	//const static string resultfilepath = "F:/Documents/Dropbox/program/project/recomdationReviewVS/Result/amazon1w/";
+	//amazon
+	const static int userNum = 9999;
+	const static int itemNum = 24403;//\recommendationreview\Data\amazon
+	const static char* inFileName = "../recommendationreview/Data/amazon1w/Amazon_reindex_1w.txt";//
+	const static std::string DATAPATH = "../recommendationreview/Data/amazon1w/";
+	const static string resultfilepath = "F:/Documents/Dropbox/program/project/recomdationReviewVS/Result/amazon1w/";
 
 	//rym
 	//const static int userNum = 33786;

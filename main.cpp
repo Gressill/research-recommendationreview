@@ -294,24 +294,24 @@ void divideto3set10Times(SimpleNetwork &network = oldNet)
 
 void intiPramate()
 {
-    operate_config opc(configFile);
-    minlamada = opc.getNumber("minlamada");
-    maxlamada = opc.getNumber("maxlamada");
-    lamadaIncremental = opc.getNumber("lamadaincremental");
-    minsita = opc.getNumber("minsita");
-    maxsita = opc.getNumber("maxsita");
-    sitaIncremental = opc.getNumber("sitaincremental");
-    mingama = opc.getNumber("mingama");
-    maxgama = opc.getNumber("maxgama");
+	operate_config opc(configFile);
+	minlamada = opc.getNumber("minlamada");
+	maxlamada = opc.getNumber("maxlamada");
+	lamadaIncremental = opc.getNumber("lamadaincremental");
+	minsita = opc.getNumber("minsita");
+	maxsita = opc.getNumber("maxsita");
+	sitaIncremental = opc.getNumber("sitaincremental");
+	mingama = opc.getNumber("mingama");
+	maxgama = opc.getNumber("maxgama");
 	gamaIncremental = opc.getNumber("gamaincremental");
 	if (opc.getNumber("degreelimited")!=notFound_number)
 	{
 		degreeLimited = opc.getNumber("degreelimited");
 	}
 	cout<<"degreeLimited: "<<degreeLimited<<endl;
-    cout<<"minlamada: "<<minlamada<<" maxlamada: "<<maxlamada<<" lamadaIncremental: "<<lamadaIncremental<<endl;
-    cout<<"minsita: "<<minsita<<" maxsita: "<<maxsita<<" sitaIncremental: "<<sitaIncremental<<endl;
-    cout<<"mingama: "<<mingama<<" maxgama: "<<maxgama<<" gamaIncremental: "<<gamaIncremental<<endl;
+	cout<<"minlamada: "<<minlamada<<" maxlamada: "<<maxlamada<<" lamadaIncremental: "<<lamadaIncremental<<endl;
+	cout<<"minsita: "<<minsita<<" maxsita: "<<maxsita<<" sitaIncremental: "<<sitaIncremental<<endl;
+	cout<<"mingama: "<<mingama<<" maxgama: "<<maxgama<<" gamaIncremental: "<<gamaIncremental<<endl;
 }
 
 void init()
@@ -1911,7 +1911,7 @@ int RE_PD(double lamada, SimpleNetwork &network = combainTrainAndLearningSet)
 			{
 				if (tempUserScore[m1]>0)
 				{
-				    useritemsize = network.user_item_relation[m1].size();
+					useritemsize = network.user_item_relation[m1].size();
 					double allItemDegree = 0.0;
 					for (int l = 0; l < useritemsize; l++)
 					{
@@ -4549,11 +4549,11 @@ void writefile(string filename,string content)
 //		perror( "Error deleting file" );
 //	}
 
-    ofstream resultfile(filename,ios::app);           //打开文件用于写,若文件不存在就创建它
-    if(!resultfile)
-        cout << "open file：" << filename << " failure！";;                 //打开文件失败则结束运行
-    resultfile<<content<<endl;     //使用插入运算符写文件内容
-    resultfile.close();         //关闭文件
+	ofstream resultfile(filename,ios::app);           //打开文件用于写,若文件不存在就创建它
+	if(!resultfile)
+		cout << "open file：" << filename << " failure！";;                 //打开文件失败则结束运行
+	resultfile<<content<<endl;     //使用插入运算符写文件内容
+	resultfile.close();         //关闭文件
 
 //	FILE *F = fopen(filename.c_str(), "wb+");
 //    cout<<filename<<endl;
@@ -4886,7 +4886,7 @@ double calculataLocalRsAgain(){
 	return sum;
 }
 
-double calculataLocalRsAnd9010RsOne() {
+double calculata9010RsOne() {
 	const int cishu = 10;
 	bool hasOldPara = false;
 	double oldParaTimesRange = 3;
@@ -5042,6 +5042,7 @@ double calculataLocalRsAnd9010RsOne() {
 			prametesArray[times][4] = 0;
 			cout << "bestlamada: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;
 		}
+		sum += prametesArray[times][3];
 	}
 	avg = sum / cishu;
 
@@ -5085,7 +5086,7 @@ double calculataLocalRsAnd9010RsOne() {
 }
 
 //两个参数的
-double calculataLocalRsAnd9010RsTwo()
+double calculata9010RsTwo()
 {
 	const int cishu = 10;
 	bool hasOldPara = false;
@@ -5131,11 +5132,6 @@ double calculataLocalRsAnd9010RsTwo()
 
 				rsAndOthersArray[0][times] = paraGroupVector[times].rs;
 				rsAndOthersArray[1][times] = paraGroupVector[times].lrs;
-				rsAndOthersArray[2][times] = paraGroupVector[times].pricis;
-				rsAndOthersArray[3][times] = paraGroupVector[times].recall;
-				rsAndOthersArray[4][times] = paraGroupVector[times].intrSim;
-				rsAndOthersArray[5][times] = paraGroupVector[times].hamdis;
-				rsAndOthersArray[6][times] = paraGroupVector[times].Popul;
 				//rsAndOthersArray[7][times] = bestRankingScore;
 
 				//prametesArray[times][3] = rsAndOthersArray[0][times];
@@ -5187,7 +5183,7 @@ double calculataLocalRsAnd9010RsTwo()
 			{
 
 				//---------------------------------------------
-				runingMode = 0;//set testdate to train. 80%---10%
+				runingMode = 1;//set testdate to train. 80%---10%
 				//---------------------------------------------
 
 				//counterX++;
@@ -5286,21 +5282,8 @@ double calculataLocalRsAnd9010RsTwo()
 		}
 
 		//---------------------------------------------
-		runingMode = 1;//set testdate to testSet. 90%---10%
-		//---------------------------------------------
 
-		//Heter_PD(prametesArray[times][0],prametesArray[times][1]);
-		//SPD(prametesArray[times][0],prametesArray[times][1]);
-		ExtractingBackbone(prametesArray[times][0], prametesArray[times][1]);
-		//rsArray[times] = RankingScoreNotCollect();
-
-		rsAndOthersArray[0][times] = getRankingScore();
-		rsAndOthersArray[1][times] = getLocalRankingScore();
-		rsAndOthersArray[2][times] = Precision();
-		rsAndOthersArray[3][times] = Recall();
-		rsAndOthersArray[4][times] = IntraSimilarity();
-		rsAndOthersArray[5][times] = HammingDistance();
-		rsAndOthersArray[6][times] = Popularity();
+		rsAndOthersArray[0][times] = prametesArray[times][3];
 		//rsAndOthersArray[7][times] = bestRankingScore;
 
 		//prametesArray[times][3] = rsAndOthersArray[0][times];
@@ -5325,11 +5308,6 @@ double calculataLocalRsAnd9010RsTwo()
 
 		evaluationIndex[0] += rsAndOthersArray[0][times];
 		evaluationIndex[1] += rsAndOthersArray[1][times];
-		evaluationIndex[2] += rsAndOthersArray[2][times];
-		evaluationIndex[3] += rsAndOthersArray[3][times];
-		evaluationIndex[4] += rsAndOthersArray[4][times];
-		evaluationIndex[5] += rsAndOthersArray[5][times];
-		evaluationIndex[6] += rsAndOthersArray[6][times];
 
 		stadardivation += ((rsAndOthersArray[0][times] - avg)*(rsAndOthersArray[0][times] - avg));
 		//		cout<<"net "<<times<<" lamada "<<prametesArray[times][0]<<" rs is: "<<prametesArray[times][3]<<endl;
@@ -5358,11 +5336,6 @@ double calculataLocalRsAnd9010RsTwo()
 
 	evaluationIndex[0] = evaluationIndex[0] / cishu;
 	evaluationIndex[1] = evaluationIndex[1] / cishu;
-	evaluationIndex[2] = evaluationIndex[2] / cishu;
-	evaluationIndex[3] = evaluationIndex[3] / cishu;
-	evaluationIndex[4] = evaluationIndex[4] / cishu;
-	evaluationIndex[5] = evaluationIndex[5] / cishu;
-	evaluationIndex[6] = evaluationIndex[6] / cishu;
 
 	stadardivation = sqrt(stadardivation / cishu);
 
@@ -5382,7 +5355,7 @@ double calculataLocalRsAnd9010RsTwo()
 }
 
 //三个参数的
-double calculataLocalRsAnd9010RsThree()
+double calculata9010RsThree()
 {
 	const int cishu = 10;
 	bool hasOldPara = false;
@@ -5502,12 +5475,12 @@ double calculataLocalRsAnd9010RsThree()
 				for (double gama = mingama; gama <= maxgama; gama += gamaIncremental)
 				{
 					//---------------------------------------------
-					runingMode = 0;//set testdate to train. 80%---10%
+					runingMode = 1;//set testdate to train. 80%---10%
 					//---------------------------------------------
 
 
-					TheUtilmateMD(lamada,sita,gama,trainingSet);
-					//Heter_UtilmateMD(lamada, sita, gama, trainingSet);
+					//TheUtilmateMD(lamada,sita,gama);
+					Heter_UtilmateMD(lamada, sita, gama);
 
 					temprs = getRankingScore();
 					if (temprs<bestRankingScore)
@@ -5619,22 +5592,13 @@ double calculataLocalRsAnd9010RsThree()
 		runingMode = 1;//set testdate to testSet. 90%---10%
 		//---------------------------------------------
 
-		//TheUtilmateMD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2]);
+		TheUtilmateMD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2]);
 
 
-		Heter_UtilmateMD(prametesArray[times][0], prametesArray[times][1], prametesArray[times][2]);
+		//Heter_UtilmateMD(prametesArray[times][0], prametesArray[times][1], prametesArray[times][2]);
 		//rsArray[times] = RankingScoreNotCollect();
 
-		rsAndOthersArray[0][times] = getRankingScore();
-		rsAndOthersArray[1][times] = getLocalRankingScore();
-		rsAndOthersArray[2][times] = Precision();
-		rsAndOthersArray[3][times] = Recall();
-		rsAndOthersArray[4][times] = IntraSimilarity();
-		rsAndOthersArray[5][times] = HammingDistance();
-		rsAndOthersArray[6][times] = Popularity();
-		//rsAndOthersArray[7][times] = bestRankingScore;
-
-		//prametesArray[times][3] = rsAndOthersArray[0][times];
+		rsAndOthersArray[0][times] = prametesArray[times][3];
 		cout << "RS on 9---1 dividing datab	" << rsAndOthersArray[0][times] << endl;
 		sum += rsAndOthersArray[0][times];
 	}
@@ -5658,12 +5622,6 @@ double calculataLocalRsAnd9010RsThree()
 		avgOldRS += prametesArray[times][3];
 
 		evaluationIndex[0] += rsAndOthersArray[0][times];
-		evaluationIndex[1] += rsAndOthersArray[1][times];
-		evaluationIndex[2] += rsAndOthersArray[2][times];
-		evaluationIndex[3] += rsAndOthersArray[3][times];
-		evaluationIndex[4] += rsAndOthersArray[4][times];
-		evaluationIndex[5] += rsAndOthersArray[5][times];
-		evaluationIndex[6] += rsAndOthersArray[6][times];
 
 		stadardivation += ((rsAndOthersArray[0][times] - avg)*(rsAndOthersArray[0][times] - avg));
 		//		cout<<"net "<<times<<" lamada "<<prametesArray[times][0]<<" rs is: "<<prametesArray[times][3]<<endl;
@@ -5692,11 +5650,6 @@ double calculataLocalRsAnd9010RsThree()
 
 	evaluationIndex[0] = evaluationIndex[0] / cishu;
 	evaluationIndex[1] = evaluationIndex[1] / cishu;
-	evaluationIndex[2] = evaluationIndex[2] / cishu;
-	evaluationIndex[3] = evaluationIndex[3] / cishu;
-	evaluationIndex[4] = evaluationIndex[4] / cishu;
-	evaluationIndex[5] = evaluationIndex[5] / cishu;
-	evaluationIndex[6] = evaluationIndex[6] / cishu;
 
 	stadardivation = sqrt(stadardivation / cishu);
 
@@ -7066,8 +7019,8 @@ int main()
 		test();
 	}
 	else if (flag == 3){
-		calculataLocalRsAgain();
-		//calculataLocalRsAnd9010RsThree();
+		//calculataLocalRsAgain();
+		calculata9010RsThree();
 		//getStandardDevationeer();
 		//getStandardDevationOne();
 		//getStandardDevationTwo();
