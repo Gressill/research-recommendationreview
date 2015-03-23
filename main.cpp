@@ -5020,20 +5020,26 @@ double calculata9010RsOne() {
 		}
 
 		//here to add some code to record the old rs
-		if (hasOldPara)
+		if (hasOldPara && (paraGroupVector[times].oldRS<1 && paraGroupVector[times].oldRS>0))
 		{
-			if ((bestlamada == paraGroupVector[times].lamada) ||(paraGroupVector[times].oldRS <= bestRankingScore && paraGroupVector[times].oldRS>0))
+			if (paraGroupVector[times].oldRS <= bestRankingScore)
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes + 1;
 				prametesArray[times][3] = paraGroupVector[times].oldRS;
-				cout << "bestlamada is old one: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;
+				cout << "bestlamada is old one: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;	cout << "bestlamada is old one: " << prametesArray[times][0] << "	bestsita: " << prametesArray[times][1] << "	bestrs:	" << prametesArray[times][3] << endl;
+			}
+			else if (bestlamada == paraGroupVector[times].lamada){
+				prametesArray[times][0] = bestlamada;
+				prametesArray[times][3] = bestRankingScore;
+				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes;
+				cout << "bestlamada: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;
 			}
 			else{
 				prametesArray[times][0] = bestlamada;
 				prametesArray[times][3] = bestRankingScore;
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes;
-				cout << "bestlamada: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;
+				cout << "bestlamada: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;;
 			}
 		}
 		else{
@@ -5188,10 +5194,10 @@ double calculata9010RsTwo()
 
 				//counterX++;
 
-				//Heter_PD(lamada,sita,trainingSet);
-				//SPD(lamada,sita,trainingSet);
-				ExtractingBackbone(lamada, sita, trainingSet);
-
+				Heter_PD(lamada,sita);
+				//SPD(lamada,sita);
+				
+				//ExtractingBackbone(lamada, sita);
 				temprs = getRankingScore();
 
 				if (temprs<bestRankingScore)
@@ -5255,15 +5261,22 @@ double calculata9010RsTwo()
 		}
 
 		//here to add some code to record the old rs
-		if (hasOldPara)
+		if (hasOldPara && (paraGroupVector[times].oldRS<1 && paraGroupVector[times].oldRS>0))
 		{
-			if (((bestlamada == paraGroupVector[times].lamada) && (bestsita == paraGroupVector[times].sita)) || (paraGroupVector[times].oldRS <= bestRankingScore && paraGroupVector[times].oldRS>0))
+			if (paraGroupVector[times].oldRS <= bestRankingScore)
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
 				prametesArray[times][3] = paraGroupVector[times].oldRS;
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes + 1;
 				cout << "bestlamada is old one: " << prametesArray[times][0] << "	bestsita: " << prametesArray[times][1] << "	bestrs:	" << prametesArray[times][3] << endl;
+			}
+			else if ((bestlamada == paraGroupVector[times].lamada) && (bestsita == paraGroupVector[times].sita)){
+				prametesArray[times][0] = bestlamada;
+				prametesArray[times][1] = bestsita;
+				prametesArray[times][3] = bestRankingScore;
+				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes+1;
+				cout << "bestlamada: " << bestlamada << "	bestsita: " << bestsita << "	bestrs:	" << bestRankingScore << endl;
 			}
 			else{
 				prametesArray[times][0] = bestlamada;
@@ -5272,8 +5285,8 @@ double calculata9010RsTwo()
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes;
 				cout << "bestlamada: " << bestlamada << "	bestsita: " << bestsita << "	bestrs:	" << bestRankingScore << endl;
 			}
-		}
-		else{
+			
+		}else{
 			prametesArray[times][0] = bestlamada;
 			prametesArray[times][1] = bestsita;
 			prametesArray[times][3] = bestRankingScore;
@@ -5407,11 +5420,6 @@ double calculata9010RsThree()
 
 				rsAndOthersArray[0][times] = paraGroupVector[times].rs;
 				rsAndOthersArray[1][times] = paraGroupVector[times].lrs;
-				rsAndOthersArray[2][times] = paraGroupVector[times].pricis;
-				rsAndOthersArray[3][times] = paraGroupVector[times].recall;
-				rsAndOthersArray[4][times] = paraGroupVector[times].intrSim;
-				rsAndOthersArray[5][times] = paraGroupVector[times].hamdis;
-				rsAndOthersArray[6][times] = paraGroupVector[times].Popul;
 				//rsAndOthersArray[7][times] = bestRankingScore;
 
 				//prametesArray[times][3] = rsAndOthersArray[0][times];
@@ -5479,8 +5487,8 @@ double calculata9010RsThree()
 					//---------------------------------------------
 
 
-					//TheUtilmateMD(lamada,sita,gama);
-					Heter_UtilmateMD(lamada, sita, gama);
+					TheUtilmateMD(lamada,sita,gama);
+					//Heter_UtilmateMD(lamada, sita, gama);
 
 					temprs = getRankingScore();
 					if (temprs<bestRankingScore)
@@ -5557,11 +5565,11 @@ double calculata9010RsThree()
 			cout << tempcontents << endl;
 			cout << "--------------------------------------isWrongRange finish this" << times << "------------------------" << endl;
 		}
-
+		errorMessagess.str("");
 		//here to add some code to record the old rs
-		if (hasOldPara)
+		if (hasOldPara && (paraGroupVector[times].oldRS>0 && paraGroupVector[times].oldRS < 1))
 		{
-			if ((paraGroupVector[times].oldRS <= bestRankingScore  && paraGroupVector[times].oldRS>0) || ((bestlamada = paraGroupVector[times].lamada) && (bestsita = paraGroupVector[times].sita) && (bestgama = paraGroupVector[times].gama)))
+			if (paraGroupVector[times].oldRS <= bestRankingScore) 
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -5569,6 +5577,13 @@ double calculata9010RsThree()
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes + 1;
 				prametesArray[times][3] = paraGroupVector[times].oldRS;
 				cout << "bestlamada is old one: " << prametesArray[times][0] << "	bestsita: " << prametesArray[times][1] << "\tbestgama: " << prametesArray[times][2] << "	bestrs:	" << prametesArray[times][3] << endl;
+			}
+			else if ((bestlamada = paraGroupVector[times].lamada) && (bestsita = paraGroupVector[times].sita) && (bestgama = paraGroupVector[times].gama)){
+				prametesArray[times][0] = paraGroupVector[times].lamada;
+				prametesArray[times][1] = paraGroupVector[times].sita;
+				prametesArray[times][2] = paraGroupVector[times].gama;
+				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes + 1;
+				prametesArray[times][3] = bestRankingScore;
 			}
 			else{
 				prametesArray[times][0] = bestlamada;
@@ -5578,8 +5593,7 @@ double calculata9010RsThree()
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes;
 				cout << "bestlamada: " << bestlamada << "\tbestsita: " << bestsita << "\tbestgama: " << bestgama << "\tbestrs:	" << bestRankingScore << endl;
 			}
-		}
-		else{
+		}else{
 			prametesArray[times][0] = bestlamada;
 			prametesArray[times][1] = bestsita;
 			prametesArray[times][2] = bestgama;
@@ -5589,14 +5603,6 @@ double calculata9010RsThree()
 		}
 
 		//---------------------------------------------
-		runingMode = 1;//set testdate to testSet. 90%---10%
-		//---------------------------------------------
-
-		TheUtilmateMD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2]);
-
-
-		//Heter_UtilmateMD(prametesArray[times][0], prametesArray[times][1], prametesArray[times][2]);
-		//rsArray[times] = RankingScoreNotCollect();
 
 		rsAndOthersArray[0][times] = prametesArray[times][3];
 		cout << "RS on 9---1 dividing datab	" << rsAndOthersArray[0][times] << endl;
@@ -7021,7 +7027,8 @@ int main()
 	else if (flag == 3){
 		//calculataLocalRsAgain();
 		calculata9010RsThree();
-		//getStandardDevationeer();
+		//calculata9010RsTwo();
+		//getStandardDevatione();
 		//getStandardDevationOne();
 		//getStandardDevationTwo();
 		//getStandardDevationThree();
