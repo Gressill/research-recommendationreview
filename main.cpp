@@ -4925,7 +4925,7 @@ double calculata9010RsOne() {
 
 		if (hasOldPara)
 		{
-			if (paraGroupVector[times].isTheBestTimes > 1 && paraGroupVector[times].isTheBestTimes < 1000)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
+			if (paraGroupVector[times].isTheBestTimes > 0.3 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -4963,7 +4963,7 @@ double calculata9010RsOne() {
 			//IMD(lamada);
 			//IHCMatrix(lamada);
 			//HHC(lamada);
-			hybirdHAndPNonLinaer(lamada);
+			//hybirdHAndPNonLinaer(lamada);
 			//RE_NBI(lamada);
 			//Heter_NBI(lamada);
 			//PD(lamada);
@@ -4977,7 +4977,7 @@ double calculata9010RsOne() {
 			//MCF();
 			//HeatS();
 			//B_Rank();
-			//ProbS(1);
+			ProbS(1);
 			temprs = getRankingScore();
 			cout << "lamada: " << lamada << "	sita: " << 0 << " gama: " << 0 << "	nowRS: " << temprs << "	lastRankingScore " << lastRankingScore << endl;
 			if ((temprs - bestRankingScore) <= wucha)
@@ -5131,7 +5131,7 @@ double calculata9010RsTwo()
 
 		if (hasOldPara)
 		{
-			if (paraGroupVector[times].isTheBestTimes > 0.5 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
+			if (paraGroupVector[times].isTheBestTimes > 0.3 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -5354,7 +5354,7 @@ double calculata9010RsTwo()
 
 	stadardivation = sqrt(stadardivation / cishu);
 
-	stringstream avgParamStream;
+	stringstream avgParamStream; 
 
 	avgParamStream << funcName << endl;
 	avgParamStream << "minlamada: " << minlamada << " maxlamada: " << maxlamada << " lamadaIncremental: " << lamadaIncremental << endl;
@@ -5412,7 +5412,7 @@ double calculata9010RsThree()
 			cout<<paraGroupVector[i].lamada<<endl;
 			}*/
 
-			if (paraGroupVector[times].isTheBestTimes > 0.5 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
+			if (paraGroupVector[times].isTheBestTimes > 0.3 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -5720,7 +5720,7 @@ double getStandardDevationOne()
 			{
 			cout<<paraGroupVector[i].lamada<<endl;
 			}*/
-			if (paraGroupVector[times].isTheBestTimes > 1 && paraGroupVector[times].isTheBestTimes < 1000)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
+			if (paraGroupVector[times].isTheBestTimes > 0.3 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -6007,7 +6007,7 @@ double getStandardDevationTwo()
 
 		if (hasOldPara)
 		{
-			if (paraGroupVector[times].isTheBestTimes > 1 && paraGroupVector[times].isTheBestTimes < 1000)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
+			if (paraGroupVector[times].isTheBestTimes > 0.3 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -6302,7 +6302,7 @@ double getStandardDevationThree()
 			cout<<paraGroupVector[i].lamada<<endl;
 			}*/
 
-			if (paraGroupVector[times].isTheBestTimes > 1 && paraGroupVector[times].isTheBestTimes < 1000)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
+			if (paraGroupVector[times].isTheBestTimes > 0.3 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
