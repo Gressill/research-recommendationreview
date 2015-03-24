@@ -2072,7 +2072,6 @@ int Heter_PD(double lamada, double sita, SimpleNetwork &network = combainTrainAn
 				itemusersize = network.item_user_relation[tempItemId].size();
 				if (powerItemDegree[tempItemId] == 0)
 				{
-					initialScore = pow(itemusersize,lamada);
 					powerItemDegree[tempItemId] = pow(itemusersize,lamada);
 				}
 				initialScore = powerItemDegree[tempItemId];
@@ -2094,10 +2093,10 @@ int Heter_PD(double lamada, double sita, SimpleNetwork &network = combainTrainAn
 					for (int l = 0; l < useritemsize; l++)
 					{
 						int linkBackItem = network.user_item_relation[m][l];
-						itemusersize = network.item_user_relation[linkBackItem].size();
 
 						if (powerItemDegree[linkBackItem] == 0)
 						{
+							itemusersize = network.item_user_relation[linkBackItem].size();
 							powerItemDegree[linkBackItem] = pow(itemusersize,sita);
 						}
 						allItemDegree += powerItemDegree[linkBackItem];
@@ -2113,7 +2112,6 @@ int Heter_PD(double lamada, double sita, SimpleNetwork &network = combainTrainAn
 							powerItemDegree[linkBackItem] = pow(itemusersize,sita);
 						}						
 
-						//itemusersize = network.item_user_relation[linkBackItem].size();
 						hybirdDegree = powerItemDegree[linkBackItem]/allItemDegree;
 						HybirditemScore[linkBackItem] += (tempUserScore[m]*hybirdDegree);
 					}
@@ -4251,9 +4249,9 @@ int caclSparseNetwork(double lamada, SimpleNetwork &network = combainTrainAndLea
 bestsita: 1.2   bestgama: -0.6  bestefsilong: -0.8 bestrs:      0.0781399*
 bestsita: 1     bestgama: -0.48 bestefsilong: -0.7 bestrs:      0.0775405/
 /************************************************************************/
-int TheUtilmateMD(double lamada,double sita, double gama, SimpleNetwork &network = combainTrainAndLearningSet)
+int Basied_PD_RE_MD(double lamada,double sita, double gama, SimpleNetwork &network = combainTrainAndLearningSet)
 {
-	cout<<"TheUtilmateMD "<<" lamada "<<lamada<<" sita "<<sita<<" gama "<<gama<<endl;
+	cout<<"Basied_PD_RE_MD "<<" lamada "<<lamada<<" sita "<<sita<<" gama "<<gama<<endl;
 	funcName = __FUNCTION__;
 	if (checkRuning())
 	{		
@@ -4395,9 +4393,9 @@ int TheUtilmateMD(double lamada,double sita, double gama, SimpleNetwork &network
 }
 
 //bestsita: 5.52  bestgama: 1     bestefsilong: 0 bestrs: 0.107266
-int Heter_UtilmateMD(double lamada,double sita, double gama, SimpleNetwork &network = combainTrainAndLearningSet)
+int Heter_PD_RE_MD(double lamada,double sita, double gama, SimpleNetwork &network = combainTrainAndLearningSet)
 {
-	cout<<"Heter_UtilmateMD "<<" lamada "<<lamada<<" sita "<<sita<<" gama "<<gama<<endl;
+	cout<<"Heter_PD_RE_MD "<<" lamada "<<lamada<<" sita "<<sita<<" gama "<<gama<<endl;
 	funcName = __FUNCTION__;
 	if (checkRuning())
 	{		
@@ -4627,7 +4625,7 @@ void getProbs()
 		writefile(resultFilePathSS.str(),tempcontentstream.str());
 		//                cout<<"sita: "<<sita<<" gama: "<<gama<<" lamada: "<<lamada<<"	RS: "<<temprs<<endl;
 		tempcontentstream.str("");
-		if (temprs<bestRankingScore)
+		if ((temprs - bestRankingScore) <= wucha)
 		{
 			bestRankingScore = temprs;
 			bestlamada = lamada;
@@ -4664,12 +4662,12 @@ void train()
 			{
 				cout<<"sita:	"<<sita<<" gama:	"<<gama<<" efsilong:	"<<efsilong;
 				//SPD(sita,gama,trainingSet);
-				//TheUtilmateMD(sita,gama,efsilong,trainingSet);
+				//Basied_PD_RE_MD(sita,gama,efsilong,trainingSet);
 				WHC(efsilong,trainingSet);
-				//Heter_UtilmateMD(sita,gama,efsilong,trainingSet);
+				//Heter_PD_RE_MD(sita,gama,efsilong,trainingSet);
 				temprs = getRankingScore();
 				cout<<"	RS:	"<<temprs<<endl;
-				if (temprs<bestRankingScore)
+				if ((temprs - bestRankingScore) <= wucha)
 				{
 					bestRankingScore = temprs;
 					bestsita = sita;
@@ -4719,11 +4717,11 @@ void test()
 	long start=clock(),end(0);
 	init();
 	//hybirdHAndPNonLinaer(0.22,combainTrainAndLearningSet);
-	//combainTrainAndLearningSet.TheUtilmateMD(1.1,-0.5,-0.78);
+	//combainTrainAndLearningSet.Basied_PD_RE_MD(1.1,-0.5,-0.78);
 	//IHCMatrix(1.14);//0,-0.48,-0.7
-	//Heter_UtilmateMD(-0.1,-0.44,-0.72);
-	//Heter_UtilmateMD(-0.16,-0.48,-0.7);
-	//Heter_UtilmateMD(0,-0.5,-0.7);
+	//Heter_PD_RE_MD(-0.1,-0.44,-0.72);
+	//Heter_PD_RE_MD(-0.16,-0.48,-0.7);
+	//Heter_PD_RE_MD(0,-0.5,-0.7);
 	//ProbS(1);
 	//B_Rank();
 	//HeatS();
@@ -4775,24 +4773,27 @@ vector<paraGroup> getLastRuningParmeter()
 		double intrSim = 0;
 		double hamdis = 0;
 		double Popul = 0;
-
 		cout << "times" << "\t" << "lamada" << "\t" << "sita" << "\t" << "gama" << "\t" << "Bests" << "\t" << "oldRS" << "\t" << "rs" << "\t" << "lrs" << "\t" << "pricis" << "\t" << "recall" << "\t" << "intrSim" << "\t" << "hamdis" << "\t" << "Popul" << endl;
 		int counter=0;
 		while (!infile.eof() )
-		{
-			counter++;		
+		{	
 			infile.getline (buffer,256);
 			stringstream ss(buffer);
+			if (ss.str().length() < 1){
+				continue;
+			}
 			ss>>times>>lamada>>sita>>gama>>bestTimes>>oldRS>>rankscore>>lrs>>pricis>>recall>>intrSim>>hamdis>>Popul;
+			//cout << "line " <<ss.str() << endl;
 			ss.str("");
 			//cout<<times<<"\t"<<lamada<<"\t"<<sita<<"\t"<<gama<<"\t"<<bestTimes<<"\t"<<oldRS<<"\t"<<rankscore<<"\t"<<lrs<<"\t"<<pricis<<"\t"<<recall<<"\t"<<intrSim<<"\t"<<hamdis<<"\t"<<Popul<<endl;;
 			//sscanf(buffer,"%d%lf%lf%lf%d%lf%lf%lf%lf%lf%lf%lf%lf",&times,&lamada,&sita,&gama,&bestTimes,&oldRS,&rankscore,&lrs,&pricis,&recall,&intrSim,&hamdis,&Popul);
 			//sscanf(buffer,"%d%lf%lf%lf%d%f",&times,&lamada,&sita,&gama,&bestTimes,&oldRS);
 			//cout<<"befor "<<times<<" "<<lamada<<"	"<<sita<<" "<<gama<<endl;
-			if (times>=10)
+			if (counter >= 10 && times == 0)
 			{
-				cout<<"times more over 10!"<<endl;
-				return paraGroupVector;
+				cout<<"times more over 10! "<<times<<endl;
+				paraGroupVector.clear();
+				//return paraGroupVector;
 			}
 			paraGroup temPg;
 			temPg.times = times;
@@ -4811,10 +4812,12 @@ vector<paraGroup> getLastRuningParmeter()
 			temPg.Popul = Popul;
 			//cout<<"after "<<temPg.times<<" "<<temPg.lamada<<"	"<<temPg.sita<<" "<<temPg.gama<<endl;
 			paraGroupVector.push_back(temPg);
-			cout<<paraGroupVector[times].times<<"\t"<<paraGroupVector[times].lamada<<"\t"<<paraGroupVector[times].sita<<"\t"<<paraGroupVector[times].gama<<"\t"<<paraGroupVector[times].isTheBestTimes<<"\t"<<paraGroupVector[times].oldRS<<"\t"<<paraGroupVector[times].rs<<"\t"<<paraGroupVector[times].lrs<<"\t"<<paraGroupVector[times].pricis<<"\t"<<paraGroupVector[times].recall<<"\t"<<paraGroupVector[times].intrSim<<"\t"<<paraGroupVector[times].hamdis<<"\t"<<paraGroupVector[times].Popul<<endl;
-			times++;
+			counter++;
 		}
 		infile.close();
+		for (int i = 0; i <= times; i++){
+			cout << paraGroupVector[i].times << "\t" << paraGroupVector[i].lamada << "\t" << paraGroupVector[i].sita << "\t" << paraGroupVector[i].gama << "\t" << paraGroupVector[i].isTheBestTimes << "\t" << paraGroupVector[i].oldRS << "\t" << paraGroupVector[i].rs << "\t" << paraGroupVector[i].lrs << "\t" << paraGroupVector[i].pricis << "\t" << paraGroupVector[i].recall << "\t" << paraGroupVector[i].intrSim << "\t" << paraGroupVector[i].hamdis << "\t" << paraGroupVector[i].Popul << endl;
+		}
 	}
 	else
 	{
@@ -4871,9 +4874,8 @@ double calculataLocalRsAgain(){
 			//ProbS(paraGroupVector[times].lamada);
 			//Heter_PD(paraGroupVector[times].lamada, paraGroupVector[times].sita);
 			//SPD(paraGroupVector[times].lamada, paraGroupVector[times].sita);	
-			TheUtilmateMD(paraGroupVector[times].lamada, paraGroupVector[times].sita,paraGroupVector[times].gama);
-			//Heter_UtilmateMD(paraGroupVector[times].lamada, paraGroupVector[times].sita, paraGroupVector[times].gama);
-			//ExtractingBackbone(paraGroupVector[times].lamada, paraGroupVector[times].sita);
+			Basied_PD_RE_MD(paraGroupVector[times].lamada, paraGroupVector[times].sita,paraGroupVector[times].gama);
+			//Heter_PD_RE_MD(paraGroupVector[times].lamada, paraGroupVector[times].sita, paraGroupVector[times].gama);
 
 			double templs = getLocalRankingScore();
 			cout << "localrs	" << templs << "	and lamada is: " << paraGroupVector[times].lamada << endl;
@@ -4961,7 +4963,7 @@ double calculata9010RsOne() {
 			//IMD(lamada);
 			//IHCMatrix(lamada);
 			//HHC(lamada);
-			//hybirdHAndPNonLinaer(lamada);
+			hybirdHAndPNonLinaer(lamada);
 			//RE_NBI(lamada);
 			//Heter_NBI(lamada);
 			//PD(lamada);
@@ -4978,7 +4980,7 @@ double calculata9010RsOne() {
 			//ProbS(1);
 			temprs = getRankingScore();
 			cout << "lamada: " << lamada << "	sita: " << 0 << " gama: " << 0 << "	nowRS: " << temprs << "	lastRankingScore " << lastRankingScore << endl;
-			if (temprs < bestRankingScore)
+			if ((temprs - bestRankingScore) <= wucha)
 			{
 				bestRankingScore = temprs;
 				bestlamada = lamada;
@@ -4986,7 +4988,7 @@ double calculata9010RsOne() {
 
 			if (temprs > lastRankingScore)
 			{
-				isWrongRange = true;
+				//isWrongRange = true;
 				//cout<<"lamada: "<<lamada<<"	sita: "<<0<<" gama: "<<0<<"	RS: "<<temprs<<endl;
 				cout << "last is the best bestlamada: " << bestlamada << "	temprs:	" << temprs << endl;
 				cout << "---------------------------------------" << times << "---------------------------------------------" << endl;
@@ -5022,12 +5024,13 @@ double calculata9010RsOne() {
 		//here to add some code to record the old rs
 		if (hasOldPara && (paraGroupVector[times].oldRS<1 && paraGroupVector[times].oldRS>0))
 		{
-			if (paraGroupVector[times].oldRS <= bestRankingScore)
+			cout << "old one: " << paraGroupVector[times].oldRS << "	bestRankingScore:	" << bestRankingScore << (paraGroupVector[times].oldRS - bestRankingScore) << endl;
+			if ((paraGroupVector[times].oldRS - bestRankingScore) <= wucha)
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes + 1;
 				prametesArray[times][3] = paraGroupVector[times].oldRS;
-				cout << "bestlamada is old one: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;	cout << "bestlamada is old one: " << prametesArray[times][0] << "	bestsita: " << prametesArray[times][1] << "	bestrs:	" << prametesArray[times][3] << endl;
+				cout << "bestlamada is old one: " << prametesArray[times][0] << "	bestrs:	" << prametesArray[times][3] << endl;	
 			}
 			else if (bestlamada == paraGroupVector[times].lamada){
 				prametesArray[times][0] = bestlamada;
@@ -5084,9 +5087,9 @@ double calculata9010RsOne() {
 		//cout<<"Fourth  prametesArray[times][4] is : "<<prametesArray[times][4]<<endl;
 	}
 	avgOldRS = avgOldRS / cishu;
-	cout << "\r\n avg 90_10 rs is: " << avgOldRS << endl;
-	oldParaLogFile << "\r\n avg 90_10 rs is: " << avgOldRS << endl;
-	//cout<<"oldParaFile.str()"<<oldParaFile.str()<<endl;
+	avgLamada = avgLamada / cishu;
+	oldParaLogFile << "\r\n avg 90_10 rs is: " << avgOldRS << "	avgLamada is:	" << avgLamada << endl;
+	cout << oldParaLogFile.str() << endl;
 	removeAndWritefile("oldparam_log.txt", oldParaLogFile.str());
 	oldParaLogFile.str("");
 }
@@ -5099,7 +5102,7 @@ double calculata9010RsTwo()
 	int counterX = 0, isBestTimes = 0;
 	double rsAndOthersArray[7][cishu];//记录其他一些观测量的。0是RS，1是localRS，2Precision	3Recall	4IntraSimilarity	5HammingDistance	6Popularity 7 80%-10% RS
 	double evaluationIndex[7];//记录其他一些观测量的。0是RS，1是localRS，2Precision	3Recall	4IntraSimilarity	5HammingDistance	6Popularity 7 80%-10% RS
-	double oldParaTimesRange = 5;
+	double oldParaTimesRange = 3;
 	double avg = 0.0, sum = 0.0, stadardivation = 0.0;
 	double bestsita = 0.0, bestlamada = 0.0, bestRankingScore = 10.0, temprs = 0.0, avgLamada = 0.0, avgSita = 0.0, avgOldRS = 0.0, lastRankingScore = 10.0, lastLamada = 0;
 	double prametesArray[cishu][5];
@@ -5128,7 +5131,7 @@ double calculata9010RsTwo()
 
 		if (hasOldPara)
 		{
-			if (paraGroupVector[times].isTheBestTimes > 1 && paraGroupVector[times].isTheBestTimes < 1000)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
+			if (paraGroupVector[times].isTheBestTimes > 0.5 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -5194,13 +5197,12 @@ double calculata9010RsTwo()
 
 				//counterX++;
 
-				Heter_PD(lamada,sita);
-				//SPD(lamada,sita);
+				//Heter_PD(lamada,sita);
+				SPD(lamada,sita);
 				
-				//ExtractingBackbone(lamada, sita);
 				temprs = getRankingScore();
 
-				if (temprs<bestRankingScore)
+				if ((temprs - bestRankingScore) <= wucha)
 				{
 					bestRankingScore = temprs;
 					bestsita = sita;
@@ -5222,7 +5224,7 @@ double calculata9010RsTwo()
 				lastRankingScore = temprs;
 				lastLamada = lamada;
 
-				/*if (temprs<bestRankingScore)
+				/*if ((temprs - bestRankingScore) <= wucha)
 				{
 				bestRankingScore = temprs;
 				bestsita = sita;
@@ -5263,7 +5265,7 @@ double calculata9010RsTwo()
 		//here to add some code to record the old rs
 		if (hasOldPara && (paraGroupVector[times].oldRS<1 && paraGroupVector[times].oldRS>0))
 		{
-			if (paraGroupVector[times].oldRS <= bestRankingScore)
+			if ((paraGroupVector[times].oldRS - bestRankingScore) <= wucha)
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -5410,7 +5412,7 @@ double calculata9010RsThree()
 			cout<<paraGroupVector[i].lamada<<endl;
 			}*/
 
-			if (paraGroupVector[times].isTheBestTimes > 1 && paraGroupVector[times].isTheBestTimes < 1000)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
+			if (paraGroupVector[times].isTheBestTimes > 0.5 && paraGroupVector[times].isTheBestTimes < 100)//如果对这个数据集来说参数已经是最优的，那么就直接跳过这个数据集，还是用以前的参数。<1000
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -5487,11 +5489,11 @@ double calculata9010RsThree()
 					//---------------------------------------------
 
 
-					TheUtilmateMD(lamada,sita,gama);
-					//Heter_UtilmateMD(lamada, sita, gama);
+					//Basied_PD_RE_MD(lamada,sita,gama);
+					Heter_PD_RE_MD(lamada, sita, gama);
 
 					temprs = getRankingScore();
-					if (temprs<bestRankingScore)
+					if ((temprs - bestRankingScore) <= wucha)
 					{
 						bestRankingScore = temprs;
 						bestsita = sita;
@@ -5516,7 +5518,7 @@ double calculata9010RsThree()
 					lastLamada = lamada;
 					Lastsita = sita;
 
-					/*if (temprs<bestRankingScore)
+					/*if ((temprs - bestRankingScore) <= wucha)
 					{
 					bestRankingScore = temprs;
 					bestsita = sita;
@@ -5569,7 +5571,7 @@ double calculata9010RsThree()
 		//here to add some code to record the old rs
 		if (hasOldPara && (paraGroupVector[times].oldRS>0 && paraGroupVector[times].oldRS < 1))
 		{
-			if (paraGroupVector[times].oldRS <= bestRankingScore) 
+			if ((paraGroupVector[times].oldRS - bestRankingScore) <= wucha) 
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -5789,12 +5791,12 @@ double getStandardDevationOne()
 			//temprs = RankingScoreNotCollect(learningSet);
 			//Heter_PD(lamada,sita,trainingSet);
 			//SPD(lamada,sita,trainingSet);
-			//TheUtilmateMD(lamada,sita,gama,trainingSet);
-			/*Heter_UtilmateMD(lamada,sita,gama);*/
+			//Basied_PD_RE_MD(lamada,sita,gama,trainingSet);
+			/*Heter_PD_RE_MD(lamada,sita,gama);*/
 			temprs = getRankingScore();
 			cout<<"lamada: "<<lamada<<"	sita: "<<0<<" gama: "<<0<<"	nowRS: "<<temprs<<"	lastRankingScore "<<lastRankingScore<<endl;
 			cout<<"local is : "<<getLocalRankingScore()<<endl;
-			if (temprs<bestRankingScore)
+			if ((temprs - bestRankingScore) <= wucha)
 			{
 				bestRankingScore = temprs;
 				bestlamada = lamada;		
@@ -5835,7 +5837,7 @@ double getStandardDevationOne()
 		//here to add some code to record the old rs
 		if (hasOldPara)
 		{
-			if ((bestlamada == paraGroupVector[times].lamada) || (paraGroupVector[times].oldRS <= bestRankingScore && paraGroupVector[times].oldRS>0))
+			if ((bestlamada == paraGroupVector[times].lamada) || ((paraGroupVector[times].oldRS - bestRankingScore) <= wucha && paraGroupVector[times].oldRS>0))
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][4] = paraGroupVector[times].isTheBestTimes+1;
@@ -5880,8 +5882,8 @@ double getStandardDevationOne()
 		//ProbS(1);
 		//Heter_PD(prametesArray[times][0],prametesArray[times][1]);
 		//SPD(prametesArray[times][0],prametesArray[times][1]);
-		//TheUtilmateMD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2],trainingSet);
-		/*Heter_UtilmateMD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2],trainingSet);*/
+		//Basied_PD_RE_MD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2],trainingSet);
+		/*Heter_PD_RE_MD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2],trainingSet);*/
 		//rsArray[times] = RankingScoreNotCollect();
 
 		rsAndOthersArray[0][times] = getRankingScore();
@@ -6076,12 +6078,11 @@ double getStandardDevationTwo()
 				//counterX++;
 
 				//Heter_PD(lamada,sita,trainingSet);
-				//SPD(lamada,sita,trainingSet);
-				ExtractingBackbone(lamada,sita,trainingSet);
+				SPD(lamada,sita,trainingSet);
 
 				temprs = getRankingScore();
 
-				if (temprs<bestRankingScore)
+				if ((temprs - bestRankingScore) <= wucha)
 				{
 					bestRankingScore = temprs;
 					bestsita = sita;
@@ -6103,7 +6104,7 @@ double getStandardDevationTwo()
 				lastRankingScore = temprs;	
 				lastLamada = lamada;
 
-				/*if (temprs<bestRankingScore)
+				/*if ((temprs - bestRankingScore) <= wucha)
 				{
 				bestRankingScore = temprs;
 				bestsita = sita;
@@ -6142,7 +6143,7 @@ double getStandardDevationTwo()
 		//here to add some code to record the old rs
 		if (hasOldPara)
 		{
-			if (((bestlamada == paraGroupVector[times].lamada) && (bestsita == paraGroupVector[times].sita)) || (paraGroupVector[times].oldRS <= bestRankingScore && paraGroupVector[times].oldRS>0))
+			if (((bestlamada == paraGroupVector[times].lamada) && (bestsita == paraGroupVector[times].sita)) || ((paraGroupVector[times].oldRS - bestRankingScore) <= wucha && paraGroupVector[times].oldRS>0))
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -6169,8 +6170,7 @@ double getStandardDevationTwo()
 		//---------------------------------------------
 
 		//Heter_PD(prametesArray[times][0],prametesArray[times][1]);
-		//SPD(prametesArray[times][0],prametesArray[times][1]);
-		ExtractingBackbone(prametesArray[times][0],prametesArray[times][1]);
+		SPD(prametesArray[times][0],prametesArray[times][1]);
 		//rsArray[times] = RankingScoreNotCollect();
 
 		rsAndOthersArray[0][times] = getRankingScore();
@@ -6383,13 +6383,13 @@ double getStandardDevationThree()
 					//---------------------------------------------
 
 					
-					//TheUtilmateMD(lamada,sita,gama,trainingSet);
+					//Basied_PD_RE_MD(lamada,sita,gama,trainingSet);
 
 
-					Heter_UtilmateMD(lamada,sita,gama,trainingSet);
+					Heter_PD_RE_MD(lamada,sita,gama,trainingSet);
 					
 					temprs = getRankingScore();
-					if (temprs<bestRankingScore)
+					if ((temprs - bestRankingScore) <= wucha)
 					{
 						bestRankingScore = temprs;
 						bestsita = sita;
@@ -6414,7 +6414,7 @@ double getStandardDevationThree()
 					lastLamada = lamada;
 					Lastsita = sita;
 
-					/*if (temprs<bestRankingScore)
+					/*if ((temprs - bestRankingScore) <= wucha)
 					{
 						bestRankingScore = temprs;
 						bestsita = sita;
@@ -6464,7 +6464,7 @@ double getStandardDevationThree()
 		//here to add some code to record the old rs
 		if (hasOldPara)
 		{
-			if ((paraGroupVector[times].oldRS <= bestRankingScore  && paraGroupVector[times].oldRS>0) || ((bestlamada = paraGroupVector[times].lamada) && (bestsita = paraGroupVector[times].sita) && (bestgama = paraGroupVector[times].gama)))
+			if (((paraGroupVector[times].oldRS - bestRankingScore) <= wucha  && paraGroupVector[times].oldRS>0) || ((bestlamada = paraGroupVector[times].lamada) && (bestsita = paraGroupVector[times].sita) && (bestgama = paraGroupVector[times].gama)))
 			{
 				prametesArray[times][0] = paraGroupVector[times].lamada;
 				prametesArray[times][1] = paraGroupVector[times].sita;
@@ -6493,10 +6493,8 @@ double getStandardDevationThree()
 		runingMode = 1;//set testdate to testSet. 90%---10%
 		//---------------------------------------------
 		
-		//TheUtilmateMD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2]);
-
-
-		Heter_UtilmateMD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2]);
+		//Basied_PD_RE_MD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2]);
+		Heter_PD_RE_MD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2]);
 		//rsArray[times] = RankingScoreNotCollect();
 
 		rsAndOthersArray[0][times] = getRankingScore();
@@ -6701,8 +6699,8 @@ double getStandardDevation()
 					//temprs = RankingScoreNotCollect(learningSet);
 					Heter_PD(lamada,sita,trainingSet);
 					//SPD(lamada,sita,trainingSet);
-					//TheUtilmateMD(lamada,sita,gama,trainingSet);
-					/*Heter_UtilmateMD(lamada,sita,gama);*/
+					//Basied_PD_RE_MD(lamada,sita,gama,trainingSet);
+					/*Heter_PD_RE_MD(lamada,sita,gama);*/
 					temprs = getRankingScore();
 					cout<<"lamada: "<<lamada<<"	sita: "<<sita<<" gama: "<<gama<<"	nowRS: "<<temprs<<"	lastRankingScore "<<lastRankingScore<<endl;
 
@@ -6719,7 +6717,7 @@ double getStandardDevation()
 
 					lastRankingScore = temprs;	
 
-					if (temprs<bestRankingScore)
+					if ((temprs - bestRankingScore) <= wucha)
 					{
 						bestRankingScore = temprs;
 						bestsita = sita;
@@ -6793,8 +6791,8 @@ double getStandardDevation()
 		//ProbS(1);
 		Heter_PD(prametesArray[times][0],prametesArray[times][1]);
 		//SPD(prametesArray[times][0],prametesArray[times][1]);
-		//TheUtilmateMD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2],trainingSet);
-		/*Heter_UtilmateMD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2],trainingSet);*/
+		//Basied_PD_RE_MD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2],trainingSet);
+		/*Heter_PD_RE_MD(prametesArray[times][0],prametesArray[times][1],prametesArray[times][2],trainingSet);*/
 		//rsArray[times] = RankingScoreNotCollect();
 
 		rsAndOthersArray[0][times] = getRankingScore();
@@ -7026,8 +7024,12 @@ int main()
 	}
 	else if (flag == 3){
 		//calculataLocalRsAgain();
-		calculata9010RsThree();
+
+		calculata9010RsOne();
 		//calculata9010RsTwo();
+		//calculata9010RsThree();
+
+
 		//getStandardDevatione();
 		//getStandardDevationOne();
 		//getStandardDevationTwo();

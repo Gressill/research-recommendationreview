@@ -15,22 +15,23 @@ class Constant{
 	//const int TOPL=50;
 	const int HASHLENGTH= 3000;
 	const static int notFound_number = -333;
+	const static double wucha = 0.00001;
 
 	//movielens
- //   const static int userNum = 943;
- //   const static int itemNum = 1682;
- //   const static char* inFileName = "../recommendationreview/Data/movielens/movielens.dat";//polblogs1  realPolblogbeginfrom1
-	//const static std::string DATAPATH = "../recommendationreview/Data/movielens/";
-	//const static string resultfilepath = "F:/Documents/Dropbox/program/project/recomdationReviewVS/Result/movielens/";
+	const static int userNum = 943;
+	const static int itemNum = 1682;
+	const static char* inFileName = "../recommendationreview/Data/movielens/movielens.dat";//polblogs1  realPolblogbeginfrom1
+	const static std::string DATAPATH = "../recommendationreview/Data/movielens/";
+	const static string resultfilepath = "F:/Documents/Dropbox/program/project/recomdationReviewVS/Result/movielens/";
 
 	//netflix
-	const static int userNum = 10000;
-	const static int itemNum = 6000;
+	//const static int userNum = 10000;
+	//const static int itemNum = 6000;
+	////const static char* inFileName = "../recommendationreview/Data/netflix_pnas/netflix_pnas.txt";//
+	////const static std::string DATAPATH = "../recommendationreview/Data/netflix_pnas/";
 	//const static char* inFileName = "../recommendationreview/Data/netflix_pnas/netflix_pnas.txt";//
 	//const static std::string DATAPATH = "../recommendationreview/Data/netflix_pnas/";
-	const static char* inFileName = "../recommendationreview/Data/netflix_pnas/netflix_pnas.txt";//
-	const static std::string DATAPATH = "../recommendationreview/Data/netflix_pnas/";
-	const static string resultfilepath = "F:/Documents/Dropbox/program/project/recomdationReviewVS/Result/netflix/";
+	//const static string resultfilepath = "F:/Documents/Dropbox/program/project/recomdationReviewVS/Result/netflix/";
 
 	//amazon
 	//const static int userNum = 9999;
