@@ -4977,7 +4977,8 @@ double calculata9010RsOne() {
 			//MCF();
 			//HeatS();
 			//B_Rank();
-			ProbS(1);
+			//ProbS(1);
+			ProbS(lamada);
 			temprs = getRankingScore();
 			cout << "lamada: " << lamada << "	sita: " << 0 << " gama: " << 0 << "	nowRS: " << temprs << "	lastRankingScore " << lastRankingScore << endl;
 			if ((temprs - bestRankingScore) <= wucha)
@@ -5489,8 +5490,8 @@ double calculata9010RsThree()
 					//---------------------------------------------
 
 
-					//Basied_PD_RE_MD(lamada,sita,gama);
-					Heter_PD_RE_MD(lamada, sita, gama);
+					Basied_PD_RE_MD(lamada,sita,gama);
+					//Heter_PD_RE_MD(lamada, sita, gama);
 
 					temprs = getRankingScore();
 					if ((temprs - bestRankingScore) <= wucha)
