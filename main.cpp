@@ -2083,6 +2083,7 @@ int Heter_PD(double lamada, double sita, SimpleNetwork &network = combainTrainAn
 					tempUserScore[linkBackUser] += (initialScore/itemusersize);
 				}
 			}
+			memset(powerItemDegree,0,sizeof(powerItemDegree));
 			//user to item
 			for (int m = 0; m<userNum; m++)
 			{
@@ -2704,14 +2705,18 @@ int ExtractingBackbone(double lamada,double percent, SimpleNetwork &network = co
 	cout<<degrees<<" now we have drgree: "<<network.countDegree()<<"tempdegre: "<<tempdegre<<endl;
 	double tempUserScore[userNum];
 	double tempItemScore[itemNum];
+	double tempItemPowerDegree[itemNum];
+	double tempUserPowerDegree[userNum];
 	double hybirdDegree;
 	//emptyVector(&Hybirdscore);
 	for (int i = 0; i<userNum; i++)
 	{
 		memset(tempUserScore,0,sizeof(tempUserScore));
 		memset(tempItemScore,0,sizeof(tempItemScore));
-		memset(unSortedScore,0,sizeof(unSortedScore));
-		memset(HybirditemScore,0,sizeof(HybirditemScore));
+		memset(unSortedScore, 0, sizeof(unSortedScore));
+		memset(HybirditemScore, 0, sizeof(HybirditemScore));
+		memset(tempItemPowerDegree, 0, sizeof(tempItemPowerDegree));
+		memset(tempUserPowerDegree, 0, sizeof(tempUserPowerDegree));
 		//item to user
 		int tsize = network.user_item_relation[i].size();
 		if (tsize>0)
@@ -2722,7 +2727,13 @@ int ExtractingBackbone(double lamada,double percent, SimpleNetwork &network = co
 				for (unsigned int k = 0; k < network.item_user_relation[tempItemId].size(); k++)
 				{
 					int linkBackUser = network.item_user_relation[tempItemId][k];
-					hybirdDegree = pow((double)network.item_user_relation[tempItemId].size(),lamada)*pow((double)network.user_item_relation[linkBackUser].size(),(1-lamada));
+					if (tempItemPowerDegree[tempItemId] == 0){
+						tempItemPowerDegree[tempItemId] = pow((double)network.item_user_relation[tempItemId].size(), lamada);
+					}
+					if (tempUserPowerDegree[linkBackUser] == 0){
+						tempUserPowerDegree[linkBackUser] = pow((double)network.user_item_relation[linkBackUser].size(), (1 - lamada));
+					}
+					hybirdDegree = tempItemPowerDegree[tempItemId] * tempUserPowerDegree[linkBackUser];
 					tempUserScore[linkBackUser] += (1.0/hybirdDegree);
 				}
 			}
@@ -2734,7 +2745,13 @@ int ExtractingBackbone(double lamada,double percent, SimpleNetwork &network = co
 					for (unsigned int l = 0; l < network.user_item_relation[m].size(); l++)
 					{
 						int linkBackItem = network.user_item_relation[m][l];
-						hybirdDegree = pow((double)network.user_item_relation[m].size(),lamada)*pow((double)network.item_user_relation[linkBackItem].size(),(1-lamada));
+						if (tempItemPowerDegree[linkBackItem] == 0){
+							tempItemPowerDegree[linkBackItem] = pow((double)network.item_user_relation[linkBackItem].size(), (1 - lamada));
+						}
+						if (tempUserPowerDegree[m] == 0){
+							tempUserPowerDegree[m] = pow((double)network.user_item_relation[m].size(),lamada);
+						}
+						//hybirdDegree = pow((double)network.user_item_relation[m].size(),lamada)*pow((double)network.item_user_relation[linkBackItem].size(),(1-lamada));
 						//cout<<linkBackUser<<" "<<l<<" "<<linkBackItem<<endl;
 						HybirditemScore[linkBackItem] += (tempUserScore[m]/hybirdDegree);
 					}
@@ -3131,13 +3148,13 @@ int B_Rank(SimpleNetwork &network = combainTrainAndLearningSet){
 }
 
 //Tian Qiu, Guang Chen, Zi-Ke Zhang and Tao Zhou, An item-oriented recommendation algorithm on cold-start problem, EPL 95, 58003 (2011).
-int Cold_StartMatrix(double gama, SimpleNetwork &network = combainTrainAndLearningSet){
+int Cold_StartMatrix(double lamada, SimpleNetwork &network = combainTrainAndLearningSet){
+	cout << "this is Cold_StartMatrix and lamada is :	" << lamada << endl;
 	funcName = __FUNCTION__;
 	if (checkRuning())
 	{		
 		return -1;
 	}
-	double lamada=0.0;
 	int allcommonUsers, sizei,sizej;
 	int itemMaxDegree = network.getItemMaxDegree();	
 	double powItemDegree[itemNum];
@@ -3185,8 +3202,8 @@ int Cold_StartMatrix(double gama, SimpleNetwork &network = combainTrainAndLearni
 					cout<<itemsCommonNeighbor[commonuser]<<" network.user_item_relation[commonuser] size is :"<< network.user_item_relation[itemsCommonNeighbor[commonuser]].size()<<endl;
 				}
 			}
-			//lamada = pow(sizej*1.0/itemMaxDegree,gama*1.0);
-			//cout<<"this is Cold_Start and gama is :	"<<gama<<" lamada "<<lamada<<endl;
+			//lamada = pow(sizej*1.0/itemMaxDegree,lamada*1.0);
+			//cout<<"this is Cold_Start and lamada is :	"<<lamada<<" lamada "<<lamada<<endl;
 			//transformationMatrix(itemAlpha,itemBeta) = temp/(pow((sizei*1.0),(1-powItemDegree[itemBeta]))*pow((sizej*1.0),powItemDegree[itemBeta]));
 			tripletList.push_back(TRIPLET(itemAlpha,itemBeta,temp/(pow((sizei*1.0),(1-powItemDegree[itemBeta]))*pow((sizej*1.0),powItemDegree[itemBeta]))));
 			tripletList.push_back(TRIPLET(itemBeta,itemAlpha,temp/(pow((sizej*1.0),(1-powItemDegree[itemAlpha]))*pow((sizei*1.0),powItemDegree[itemAlpha]))));
@@ -4193,8 +4210,8 @@ int caclSparseNetwork(double lamada, SimpleNetwork &network = combainTrainAndLea
 					cout<<itemsCommonNeighbor[commonuser]<<" network.user_item_relation[commonuser] size is :"<< network.user_item_relation[itemsCommonNeighbor[commonuser]].size()<<endl;
 				}
 			}
-			//lamada = pow(sizej*1.0/itemMaxDegree,gama*1.0);
-			//cout<<"this is Cold_Start and gama is :	"<<gama<<" lamada "<<lamada<<endl;
+			//lamada = pow(sizej*1.0/itemMaxDegree,lamada*1.0);
+			//cout<<"this is Cold_Start and lamada is :	"<<lamada<<" lamada "<<lamada<<endl;
 			//transformationMatrix(itemAlpha,itemBeta) = temp/(pow((sizei*1.0),(1-powItemDegree[itemBeta]))*pow((sizej*1.0),powItemDegree[itemBeta]));
 			double alphaDegree = pow((sizei*1.0),(1-powItemDegree[itemBeta]))*pow((sizej*1.0),powItemDegree[itemBeta]);
 			double betaDegree = pow((sizej*1.0),(1-powItemDegree[itemAlpha]))*pow((sizei*1.0),powItemDegree[itemAlpha]);
@@ -4966,7 +4983,7 @@ double calculata9010RsOne() {
 			//hybirdHAndPNonLinaer(lamada);
 			//RE_NBI(lamada);
 			//Heter_NBI(lamada);
-			//PD(lamada);
+			PD(lamada);
 			//URA_NBI(lamada);
 			//Biased_Heat(lamada);
 			//Cold_Start(lamada);
@@ -4978,7 +4995,7 @@ double calculata9010RsOne() {
 			//HeatS();
 			//B_Rank();
 			//ProbS(1);
-			ProbS(lamada);
+			//ProbS(lamada);
 			temprs = getRankingScore();
 			cout << "lamada: " << lamada << "	sita: " << 0 << " gama: " << 0 << "	nowRS: " << temprs << "	lastRankingScore " << lastRankingScore << endl;
 			if ((temprs - bestRankingScore) <= wucha)
@@ -5490,8 +5507,8 @@ double calculata9010RsThree()
 					//---------------------------------------------
 
 
-					Basied_PD_RE_MD(lamada,sita,gama);
-					//Heter_PD_RE_MD(lamada, sita, gama);
+					//Basied_PD_RE_MD(lamada,sita,gama);
+					Heter_PD_RE_MD(lamada, sita, gama);
 
 					temprs = getRankingScore();
 					if ((temprs - bestRankingScore) <= wucha)
@@ -5678,7 +5695,6 @@ double calculata9010RsThree()
 	return stadardivation;
 }
 
-
 //一个参数的
 double getStandardDevationOne()
 {
@@ -5767,7 +5783,7 @@ double getStandardDevationOne()
 			//---------------------------------------------
 
 			//counterX++;
-			//WHCMatrix(lamada,trainingSet);
+			WHCMatrix(lamada,trainingSet);
 			//IHC(lamada,trainingSet);
 			//IMD(lamada,trainingSet);
 			//IHCMatrix(lamada,trainingSet);
@@ -5776,7 +5792,7 @@ double getStandardDevationOne()
 			//hybirdHAndPNonLinaer(lamada,trainingSet);
 			//RE_NBI(lamada,trainingSet);
 			//Heter_NBI(lamada,trainingSet);
-			PD(lamada,trainingSet);
+			//PD(lamada,trainingSet);
 			//URA_NBI(lamada,trainingSet);
 			//Biased_Heat(lamada,trainingSet);
 			//Cold_Start(lamada,trainingSet);
@@ -5859,7 +5875,7 @@ double getStandardDevationOne()
 		//---------------------------------------------
 		runingMode = 1;//set testdate to testSet. 90%---10%
 		//---------------------------------------------
-		//WHCMatrix(prametesArray[times][0]);
+		WHCMatrix(prametesArray[times][0]);
 		//IHC(prametesArray[times][0]);
 		//IMD(prametesArray[times][0]);
 		//IHCMatrix(prametesArray[times][0]);
@@ -5868,7 +5884,7 @@ double getStandardDevationOne()
 		//hybirdHAndPNonLinaer(prametesArray[times][0]);
 		//RE_NBI(prametesArray[times][0]);
 		//Heter_NBI(prametesArray[times][0]);
-		PD(prametesArray[times][0]);
+		//PD(prametesArray[times][0]);
 		//URA_NBI(prametesArray[times][0]);
 		//Biased_Heat(prametesArray[times][0]);
 		//Cold_Start(prametesArray[times][0]);
@@ -6079,7 +6095,8 @@ double getStandardDevationTwo()
 				//counterX++;
 
 				//Heter_PD(lamada,sita,trainingSet);
-				SPD(lamada,sita,trainingSet);
+				ExtractingBackbone(lamada, sita, trainingSet);
+				//SPD(lamada,sita,trainingSet);
 
 				temprs = getRankingScore();
 
@@ -7026,14 +7043,14 @@ int main()
 	else if (flag == 3){
 		//calculataLocalRsAgain();
 
-		calculata9010RsOne();
+		//calculata9010RsOne();
 		//calculata9010RsTwo();
 		//calculata9010RsThree();
 
-
 		//getStandardDevatione();
+		
 		//getStandardDevationOne();
-		//getStandardDevationTwo();
+		getStandardDevationTwo();
 		//getStandardDevationThree();
 	}else{
 		getProbs();
