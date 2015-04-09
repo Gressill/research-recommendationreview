@@ -19,15 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Constant.h" />
-    <ClInclude Include="..\interSection.hpp" />
-    <ClInclude Include="..\operate_config.h" />
-    <ClInclude Include="..\SimpleNetwork.h" />
+    <ClInclude Include="..\recomdationSrc\Constant.h" />
+    <ClInclude Include="..\recomdationSrc\interSection.hpp" />
+    <ClInclude Include="..\recomdationSrc\operate_config.h" />
+    <ClInclude Include="..\recomdationSrc\SimpleNetwork.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\main.cpp" />
-    <ClCompile Include="..\operate_config.cpp" />
-    <ClCompile Include="..\SimpleNetwork.cpp" />
+    <ClCompile Include="..\recomdationSrc\main.cpp" />
+    <ClCompile Include="..\recomdationSrc\operate_config.cpp" />
+    <ClCompile Include="..\recomdationSrc\SimpleNetwork.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ED2C423D-C68A-4A5F-A6C4-AB37F9EE21BC}</ProjectGuid>

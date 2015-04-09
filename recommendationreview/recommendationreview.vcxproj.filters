@@ -15,27 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\SimpleNetwork.h">
+    <ClInclude Include="..\recomdationSrc\Constant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Constant.h">
+    <ClInclude Include="..\recomdationSrc\interSection.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\interSection.hpp">
+    <ClInclude Include="..\recomdationSrc\operate_config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\operate_config.h">
+    <ClInclude Include="..\recomdationSrc\SimpleNetwork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SimpleNetwork.cpp">
+    <ClCompile Include="..\recomdationSrc\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\main.cpp">
+    <ClCompile Include="..\recomdationSrc\operate_config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\operate_config.cpp">
+    <ClCompile Include="..\recomdationSrc\SimpleNetwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
